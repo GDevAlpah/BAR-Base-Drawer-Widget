@@ -50,9 +50,14 @@ Preview The base grid before drawing. Preview will move with mouse
 
 ![Grid Preview](PreviewMode.png)
 
-## Base Grid Draw
+## Base Grid Draw - Mid Base Layout
 
-![Grid Draw](GridLines.png)
+![Mid Base Layout](GridLines.png)
+
+## Base Grid Draw - Corner Base Layout
+
+![Corner Base Layout](CornerBase.png)
+
 
 ## 📐 Grid Definition
 
