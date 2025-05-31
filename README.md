@@ -11,7 +11,7 @@ This widget displays a customizable base grid overlay aligned with the map terra
 - ✏️ **Grid Preview**: Real-time line preview rendered beneath the mouse cursor.
 - 🖱️ **Mouse-Based Positioning**: Grid follows the terrain under the mouse.
 - 🎨 **Color and Style Configuration**: Easily change colors, line widths, and elevation.
-
+- 🔀 **Multi Layouts Support**: Supports switching between multiple base layout designs.
 ---
 
 
@@ -41,7 +41,7 @@ To install the **Auto Base Grid Drawer** widget:
 | `Ctrl + Alt + A` | Toggle animated grid preview mode |
 | `Ctrl + Alt + Q` | Place static grid lines onto map |
 | `Ctrl + Alt + Z` | Flip Layout Horizontally (will cause issue when grid code is 3) |
-
+| `Ctrl + Alt + X` | Switch to the next Base Layout in the list |
 ---
 
 
@@ -87,6 +87,15 @@ local grid = {
   {2, 0, 0, 0, 2},
   {2, 2, 2, 2, 2}
 }
+```
+
+### 🔀 Multi Layout Support
+
+Easily define and include your own base layouts by adding them to the list of supported grid configurations.
+
+```lua
+-- Define your own custom layout and add it to the list
+local gridLayouts = { yourCustomLayout, midLayout, corneLayout }
 ```
 
 ## 🛠️ Debugging Grid Layout changes

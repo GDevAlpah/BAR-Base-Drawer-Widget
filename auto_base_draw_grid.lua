@@ -1,10 +1,10 @@
 function widget:GetInfo()
     return {
-        name    = "Auto Base Grid Drawer",
-        desc    = "Draws base for NuttyB Raptor",
-        author  = "AlphaStrike",
-        date    = "2025",
-        layer   = 1,
+        name = "Auto Base Grid Drawer",
+        desc = "Draws base for NuttyB Raptor",
+        author = "AlphaStrike",
+        date = "2025",
+        layer = 1,
         enabled = true
     }
 end
@@ -16,16 +16,13 @@ local GL = GL
 local GL_LINES = GL.LINES
 local animating = false
 
-
-
-
 -- Configuration
-local lineWidth_GL = 2                       -- line width for animating line
-local previewLineWidth_GL = 1.5              -- line width for preview grid
-local elevationGL = 2                        -- or any small float like 1.5
-local glLineColor = { 1, 1, 0 }              -- Color for Animating line
-local glPreviewLineColor = { 1, 1, 1, 0.25 } -- preview Color for Animating gridlines line
-local tileSize = 192                         -- grid tile size
+local lineWidth_GL = 2 -- line width for animating line
+local previewLineWidth_GL = 1.5 -- line width for preview grid
+local elevationGL = 2 -- or any small float like 1.5
+local glLineColor = {1, 1, 0} -- Color for Animating line
+local glPreviewLineColor = {1, 1, 1, 0.25} -- preview Color for Animating gridlines line
+local tileSize = 192 -- grid tile size
 
 --[[
 local grid = { { 3 , 0 ,0 ,2 , 0, 0 ,1 },
@@ -33,30 +30,49 @@ local grid = { { 3 , 0 ,0 ,2 , 0, 0 ,1 },
             }
 ]]
 
-
 --- MODIFY THIS TO CREATE YOUR BASE GRID
 --- Lines in the Grid are drawn from the left side of the Grid block
 -- 0 No lines
 -- 1 Horizontal line
 -- 2 Vertical line
 -- 3 Both
-local grid = {
-    { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 },
-    { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2 },
-    { 3, 1, 1, 2, 3, 1, 1, 2, 3, 1, 1, 2, 3, 1, 1, 1, 2 },
-    { 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2 },
-    { 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2 },
-    { 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2 }
+local midLayout ={{3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                 {3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
+                 {3, 1, 1, 2, 3, 1, 1, 2, 3, 1, 1, 2, 3, 1, 1, 1, 2},
+                 {2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2},
+                 {2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2},
+                 {2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 0, 2}}
 
-}
+local corneLayout = {{0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2}, 
+                     {0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 
+                     {3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 
+                     {2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 2}, 
+                     {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 
+                     {2, 0, 0, 0, 2, 2, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 2},
+                     {2, 0, 0, 0, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2}, 
+                     {2, 0, 0, 0, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2}, 
+                     {2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2},
+                     {2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2}}
 
+
+-- Support for multiple gridLayouts
+-- Add your layouots to this list
+local gridLayouts = {midLayout, corneLayout}
+local index = 1
+local grid = gridLayouts[index]
 
 -- Simple bitwise AND for values 0 to 3
 local function band(a, b)
@@ -92,13 +108,19 @@ local function GetGridOrientation(pos, grid, tileSize)
     local numRows = #grid
     local numCols = #grid[1]
 
-    local originX = snapX
-        - ((numCols - 1) / 2) * rightX * tileSize
-        - ((numRows - 1) / 2) * forwardX * tileSize
+    local halfTile = tileSize * 0.5
 
-    local originZ = snapZ
-        - ((numCols - 1) / 2) * rightZ * tileSize
-        - ((numRows - 1) / 2) * forwardZ * tileSize
+    local colOffset = (numCols % 2 == 0) and -rightX * halfTile or 0
+    local rowOffset = (numRows % 2 == 0) and -forwardX * halfTile or 0
+
+    local originX = snapX - (numCols - 1) * rightX * tileSize * 0.5 - (numRows - 1) * forwardX * tileSize * 0.5 +
+                        colOffset + rowOffset
+
+    local colOffsetZ = (numCols % 2 == 0) and -rightZ * halfTile or 0
+    local rowOffsetZ = (numRows % 2 == 0) and -forwardZ * halfTile or 0
+
+    local originZ = snapZ - (numCols - 1) * rightZ * tileSize * 0.5 - (numRows - 1) * forwardZ * tileSize * 0.5 +
+                        colOffsetZ + rowOffsetZ
 
     return {
         forwardX = forwardX,
@@ -110,51 +132,41 @@ local function GetGridOrientation(pos, grid, tileSize)
         originX = originX,
         originZ = originZ,
         numRows = numRows,
-        numCols = numCols,
+        numCols = numCols
     }
 end
 
-
 local function BuildPreviewGridLines(pos)
-    local horizontalLines    = {}
-    local verticalLines      = {}
+    local horizontalLines = {}
+    local verticalLines = {}
 
-    local gridInfo           = GetGridOrientation(pos, grid, tileSize)
+    local gridInfo = GetGridOrientation(pos, grid, tileSize)
 
     local forwardX, forwardZ = gridInfo.forwardX, gridInfo.forwardZ
-    local rightX, rightZ     = gridInfo.rightX, gridInfo.rightZ
-    local originX, originZ   = gridInfo.originX, gridInfo.originZ
-    local rows, cols         = gridInfo.numRows, gridInfo.numCols
-
+    local rightX, rightZ = gridInfo.rightX, gridInfo.rightZ
+    local originX, originZ = gridInfo.originX, gridInfo.originZ
+    local rows, cols = gridInfo.numRows, gridInfo.numCols
 
     -- Build horizontal lines
     for r = 0, rows do
-        local x1 = originX
-            + 0 * rightX * tileSize
-            + r * forwardX * tileSize
-        local z1 = originZ
-            + 0 * rightZ * tileSize
-            + r * forwardZ * tileSize
+        local x1 = originX + 0 * rightX * tileSize + r * forwardX * tileSize
+        local z1 = originZ + 0 * rightZ * tileSize + r * forwardZ * tileSize
 
         local x2 = x1 + (cols - 1) * rightX * tileSize
         local z2 = z1 + (cols - 1) * rightZ * tileSize
 
-        table.insert(horizontalLines, { x1, z1, x2, z2 })
+        table.insert(horizontalLines, {x1, z1, x2, z2})
     end
 
     -- Build vertical lines
     for c = 0, cols do
-        local x1 = originX
-            + c * rightX * tileSize
-            + 0 * forwardX * tileSize
-        local z1 = originZ
-            + c * rightZ * tileSize
-            + 0 * forwardZ * tileSize
+        local x1 = originX + c * rightX * tileSize + 0 * forwardX * tileSize
+        local z1 = originZ + c * rightZ * tileSize + 0 * forwardZ * tileSize
 
         local x2 = x1 + (rows - 1) * forwardX * tileSize
         local z2 = z1 + (rows - 1) * forwardZ * tileSize
 
-        table.insert(verticalLines, { x1, z1, x2, z2 })
+        table.insert(verticalLines, {x1, z1, x2, z2})
     end
 
     return horizontalLines, verticalLines
@@ -162,13 +174,13 @@ end
 
 -- Build the lines based on camera + mouse position
 local function BuildGridLines(pos)
-    local lines              = {}
-    local gridInfo           = GetGridOrientation(pos, grid, tileSize)
+    local lines = {}
+    local gridInfo = GetGridOrientation(pos, grid, tileSize)
 
     local forwardX, forwardZ = gridInfo.forwardX, gridInfo.forwardZ
-    local rightX, rightZ     = gridInfo.rightX, gridInfo.rightZ
-    local originX, originZ   = gridInfo.originX, gridInfo.originZ
-    local numRows, numCols   = gridInfo.numRows, gridInfo.numCols
+    local rightX, rightZ = gridInfo.rightX, gridInfo.rightZ
+    local originX, originZ = gridInfo.originX, gridInfo.originZ
+    local numRows, numCols = gridInfo.numRows, gridInfo.numCols
     -- Merge horizontal lines
     for row = 1, numRows do
         local startCol = nil
@@ -182,7 +194,7 @@ local function BuildGridLines(pos)
                 local startZ = originZ + (startCol - 1) * rightZ * tileSize + (numRows - row) * forwardZ * tileSize
                 local endX = originX + (col - 1) * rightX * tileSize + (numRows - row) * forwardX * tileSize
                 local endZ = originZ + (col - 1) * rightZ * tileSize + (numRows - row) * forwardZ * tileSize
-                table.insert(lines, { startX, startZ, endX, endZ })
+                table.insert(lines, {startX, startZ, endX, endZ})
                 startCol = nil
             end
         end
@@ -197,20 +209,21 @@ local function BuildGridLines(pos)
             if isLine and not startRow then
                 startRow = row
             elseif not isLine and startRow then
-                local startX = originX + (col - 1) * rightX * tileSize + (numRows - startRow + 1) * forwardX * tileSize -
-                    forwardX * tileSize
-                local startZ = originZ + (col - 1) * rightZ * tileSize + (numRows - startRow + 1) * forwardZ * tileSize -
-                    forwardZ * tileSize
+                local startX =
+                    originX + (col - 1) * rightX * tileSize + (numRows - startRow + 1) * forwardX * tileSize - forwardX *
+                        tileSize
+                local startZ =
+                    originZ + (col - 1) * rightZ * tileSize + (numRows - startRow + 1) * forwardZ * tileSize - forwardZ *
+                        tileSize
                 local endX = originX + (col - 1) * rightX * tileSize + (numRows - row + 1) * forwardX * tileSize -
-                    forwardX * tileSize
+                                 forwardX * tileSize
                 local endZ = originZ + (col - 1) * rightZ * tileSize + (numRows - row + 1) * forwardZ * tileSize -
-                    forwardZ * tileSize
-                table.insert(lines, { startX, startZ, endX, endZ })
+                                 forwardZ * tileSize
+                table.insert(lines, {startX, startZ, endX, endZ})
                 startRow = nil
             end
         end
     end
-
 
     --[[
     -- Debug arrow (forward direction)
@@ -224,8 +237,6 @@ local function BuildGridLines(pos)
 
     return lines
 end
-
-
 
 -- 🖍️ Draw the provided lines
 local function DrawGridLines(lines)
@@ -254,8 +265,6 @@ local function animateGridLines(lines, lineWidth, lineColor)
     gl.LineWidth(1)
     gl.DepthTest(false)
 end
-
-
 
 function widget:DrawWorld()
     if animating then
@@ -293,6 +302,15 @@ local function FlipGridHorizontal(original)
     return flipped
 end
 
+local function NextLayout()
+    index = index + 1
+    if index > #gridLayouts then
+        index = 1  -- wrap around to the first layout
+    end
+    grid = gridLayouts[index]
+    Spring.Echo("Switched to layout index: " .. index)
+end
+
 function widget:KeyPress(key, mods, isRepeat)
     if mods.ctrl and mods.alt then
         if key == KEYSYMS.A then
@@ -311,6 +329,11 @@ function widget:KeyPress(key, mods, isRepeat)
             Spring.Echo("[Grid] Grid Mirrored")
             -- Flip grid
             grid = FlipGridHorizontal(grid)
+        elseif key == KEYSYMS.X then
+            Spring.Echo("[Grid] Grid Next layout")
+            -- NextLayout grid
+             NextLayout()
+             grid = gridLayouts[index]
         end
     end
 end
