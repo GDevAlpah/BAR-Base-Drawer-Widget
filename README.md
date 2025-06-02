@@ -14,6 +14,8 @@ This widget displays a customizable base grid overlay aligned with the map terra
 - 🔀 **Multi Layouts Support**: Supports switching between multiple base layout designs.
 ---
 
+## Grid Builder Helper Page 
+👉 [Open Grid Builder Page](https://gdevalpha.github.io/Auto-Base-Grid-Drawer-Widget-Grid-Layout-Builder/)
 
 ## 📦 Installation
 
